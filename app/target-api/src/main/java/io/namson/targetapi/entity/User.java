@@ -26,8 +26,7 @@ public class User {
     @Column(nullable = false, unique = true, length = 255)
     private String email;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     protected User() {

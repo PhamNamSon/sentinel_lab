@@ -1,0 +1,8 @@
+CREATE TABLE users (
+    uuid RAW(16) PRIMARY KEY,
+    name VARCHAR2(100) NOT NULL,
+    email VARCHAR2(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+
+    CONSTRAINT uq_users_email UNIQUE (email)
+);

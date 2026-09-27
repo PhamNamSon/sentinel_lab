@@ -28,16 +28,20 @@ public class Product {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    @Column(nullable = false)
+    private Integer stock;
+
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     protected Product() {
     }
 
-    public Product(String name, String description, BigDecimal price) {
+    public Product(String name, String description, BigDecimal price, Integer stock) {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.stock = stock;
     }
 
     public UUID getUuid() {
@@ -54,6 +58,10 @@ public class Product {
 
     public BigDecimal getPrice() {
         return price;
+    }
+
+    public Integer getStock() {
+        return stock;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -1,10 +1,13 @@
 package io.namson.targetapi.service;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import io.namson.targetapi.dto.CreateUserRequest;
 import io.namson.targetapi.dto.UserResponse;
 import io.namson.targetapi.entity.User;
+import io.namson.targetapi.exception.UserNotFoundException;
 import io.namson.targetapi.repository.UserRepository;
 
 @Service
@@ -28,6 +31,17 @@ public class UserService {
                 savedUser.getName(),
                 savedUser.getEmail(),
                 savedUser.getCreatedAt());
+    }
+
+    public UserResponse getUserById(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        return new UserResponse(
+                user.getUuid(),
+                user.getName(),
+                user.getEmail(),
+                user.getCreatedAt());
     }
 
 }

@@ -1,0 +1,2 @@
+ALTER TABLE products
+ADD stock NUMBER(10) DEFAULT 0 NOT NULL;

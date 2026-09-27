@@ -1,5 +1,10 @@
 package io.namson.targetapi.service;
 
+import java.util.UUID;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import io.namson.targetapi.dto.CreateProductRequest;
@@ -32,6 +37,32 @@ public class ProductService {
                 savedProduct.getPrice(),
                 savedProduct.getStock(),
                 savedProduct.getCreatedAt());
+    }
+
+    public ProductResponse getProductById(UUID id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+
+        return new ProductResponse(
+                product.getUuid(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStock(),
+                product.getCreatedAt());
+    }
+
+    public Page<ProductResponse> searchProducts(String name, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productRepository.findByNameContainingIgnoreCase(name, pageable);
+
+        return products.map(product -> new ProductResponse(
+                product.getUuid(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStock(),
+                product.getCreatedAt()));
     }
 
 }

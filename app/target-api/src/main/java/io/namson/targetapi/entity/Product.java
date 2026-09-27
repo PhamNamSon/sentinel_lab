@@ -68,4 +68,8 @@ public class Product {
         return createdAt;
     }
 
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
 }

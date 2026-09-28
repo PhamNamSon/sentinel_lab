@@ -3,13 +3,16 @@ package io.namson.targetapi.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import io.namson.targetapi.dto.CreateOrderItemRequest;
 import io.namson.targetapi.dto.CreateOrderRequest;
+import io.namson.targetapi.dto.OrderItemResponse;
 import io.namson.targetapi.dto.OrderResponse;
+import io.namson.targetapi.dto.ProductResponse;
 import io.namson.targetapi.entity.Order;
 import io.namson.targetapi.entity.OrderItem;
 import io.namson.targetapi.entity.Product;
@@ -65,6 +68,7 @@ public class OrderService {
         }
 
         Order savedOrder = orderRepository.save(new Order(user, totalPrice));
+        List<OrderItemResponse> orderItemResponses = new ArrayList<>();
 
         for (int i = 0; i < request.products().size(); i++) {
             CreateOrderItemRequest item = request.products().get(i);
@@ -75,12 +79,49 @@ public class OrderService {
 
             OrderItem orderItem = new OrderItem(savedOrder, product, item.quantity(), product.getPrice());
             orderItemRepository.save(orderItem);
+
+            orderItemResponses.add(new OrderItemResponse(
+                    product.getName(),
+                    product.getDescription(),
+                    product.getPrice(),
+                    item.quantity()));
         }
 
         return new OrderResponse(
                 savedOrder.getUuid(),
                 savedOrder.getUser().getUuid(),
+                savedOrder.getUser().getName(),
                 savedOrder.getTotalPrice(),
-                savedOrder.getCreatedAt());
+                savedOrder.getCreatedAt(),
+                orderItemResponses);
+
     }
+
+    public OrderResponse getOrderById(UUID id) {
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", id));
+
+        List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
+        List<OrderItemResponse> orderItemResponses = new ArrayList<>();
+
+        for (OrderItem orderItem : orderItems) {
+            Product product = orderItem.getProduct();
+            orderItemResponses.add(new OrderItemResponse(
+                    product.getName(),
+                    product.getDescription(),
+                    product.getPrice(),
+                    orderItem.getQuantity()));
+        }
+
+        return new OrderResponse(
+                order.getUuid(),
+                order.getUser().getUuid(),
+                order.getUser().getName(),
+                order.getTotalPrice(),
+                order.getCreatedAt(),
+                orderItemResponses);
+
+    }
+
 }

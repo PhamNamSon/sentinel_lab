@@ -52,7 +52,7 @@ public class OrderItem {
         return order;
     }
 
-    public Product getProductId() {
+    public Product getProduct() {
         return product;
     }
 

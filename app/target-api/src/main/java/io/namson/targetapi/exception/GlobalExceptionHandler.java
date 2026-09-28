@@ -36,4 +36,21 @@ public class GlobalExceptionHandler {
 
         return response;
     }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Object> handleInsufficientStockException(
+            InsufficientStockException exception,
+            HttpServletRequest request) {
+
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        response.put("timestamp", Instant.now());
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("error", exception.getMessage());
+        response.put("path", request.getRequestURI());
+
+        return response;
+    }
+
 }

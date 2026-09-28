@@ -12,7 +12,6 @@ import io.namson.targetapi.dto.CreateOrderItemRequest;
 import io.namson.targetapi.dto.CreateOrderRequest;
 import io.namson.targetapi.dto.OrderItemResponse;
 import io.namson.targetapi.dto.OrderResponse;
-import io.namson.targetapi.dto.ProductResponse;
 import io.namson.targetapi.entity.Order;
 import io.namson.targetapi.entity.OrderItem;
 import io.namson.targetapi.entity.Product;

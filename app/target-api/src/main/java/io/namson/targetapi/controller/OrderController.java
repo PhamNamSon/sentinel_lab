@@ -14,7 +14,6 @@ import jakarta.validation.Valid;
 
 import io.namson.targetapi.dto.CreateOrderRequest;
 import io.namson.targetapi.dto.OrderResponse;
-import io.namson.targetapi.dto.ProductResponse;
 import io.namson.targetapi.service.OrderService;
 
 @RestController
@@ -43,4 +42,5 @@ public class OrderController {
         return orderService.getOrderById(id);
 
     }
+
 }

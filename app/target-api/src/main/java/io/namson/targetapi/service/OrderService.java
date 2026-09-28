@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
+import io.namson.targetapi.dto.CancelOrderResponse;
 import io.namson.targetapi.dto.CreateOrderItemRequest;
 import io.namson.targetapi.dto.CreateOrderRequest;
 import io.namson.targetapi.dto.OrderItemResponse;
@@ -120,6 +121,23 @@ public class OrderService {
                 order.getTotalPrice(),
                 order.getCreatedAt(),
                 orderItemResponses);
+
+    }
+
+    @Transactional
+    public CancelOrderResponse cancelOrder(UUID id) {
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", id));
+
+        order.cancel();
+
+        Order savedOrder = orderRepository.save(order);
+
+        return new CancelOrderResponse(
+                savedOrder.getUuid(),
+                savedOrder.getStatus(),
+                "Order cancelled successfully");
 
     }
 

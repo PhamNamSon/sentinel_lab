@@ -17,14 +17,34 @@ services:
       - oracle_data:/opt/oracle/oradata
 
     healthcheck:
-      test: ["CMD", "healthcheck.sh"]
+      test: [ "CMD", "healthcheck.sh" ]
       interval: 10s
       timeout: 3s
       retries: 10
       start_period: 60s
 
     restart: unless-stopped
-    
+
+  api:
+    build:
+      context: ../../app/target-api
+      dockerfile: Dockerfile
+
+    container_name: sentinel_api
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@//database:1521/FREEPDB1
+      SPRING_DATASOURCE_USERNAME: ${APP_USER}
+      SPRING_DATASOURCE_PASSWORD: ${APP_USER_PASSWORD}
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      database:
+        condition: service_healthy
+
+    restart: unless-stopped
 
 volumes:
   oracle_data:

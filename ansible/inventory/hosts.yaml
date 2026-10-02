@@ -1,0 +1,16 @@
+---
+kubernetes:
+  children:
+    control_plane:
+      hosts:
+        control-plane:
+          ansible_host: 10.0.0.201
+
+    worker:
+      hosts:
+        worker:
+          ansible_host: 10.0.0.202
+
+  vars:
+    ansible_user: namson
+    ansible_ssh_private_key_file: ~/.ssh/personal-fedora-homepc-lab-ed25519

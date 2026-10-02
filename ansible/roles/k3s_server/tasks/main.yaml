@@ -1,0 +1,27 @@
+---
+- name: Download K3s installation script
+  ansible.builtin.get_url:
+    url: https://get.k3s.io
+    dest: /tmp/install-k3s.sh
+    mode: "0755"
+
+- name: Install K3s server
+  ansible.builtin.command:
+    cmd: /tmp/install-k3s.sh
+    creates: /usr/local/bin/k3s
+  environment:
+    INSTALL_K3S_VERSION: "{{ k3s_version }}"
+
+- name: Read K3s node token
+  ansible.builtin.slurp:
+    src: /var/lib/rancher/k3s/server/node-token
+  register: k3s_token
+
+- name: Wait for Kubernetes API to be ready
+  ansible.builtin.command:
+    cmd: k3s kubectl get --raw=/readyz
+  register: kubernetes_ready
+  until: kubernetes_ready.rc == 0
+  retries: 10
+  delay: 5
+  changed_when: false

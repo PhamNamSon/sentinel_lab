@@ -1,0 +1,6 @@
+---
+- name: Install basic packages
+  ansible.builtin.apt:
+    name: "{{ basic_packages }}"
+    state: present
+    update_cache: true

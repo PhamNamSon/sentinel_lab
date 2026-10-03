@@ -5,6 +5,14 @@
     dest: /tmp/install-k3s.sh
     mode: "0755"
 
+- name: Read K3s node token from control plane
+  ansible.builtin.slurp:
+    src: /var/lib/rancher/k3s/server/node-token
+  register: k3s_token
+  delegate_to: control-plane
+  become: true
+  run_once: true
+
 - name: Install K3s agent
   ansible.builtin.command:
     cmd: /tmp/install-k3s.sh
@@ -12,7 +20,8 @@
   environment:
     INSTALL_K3S_VERSION: "{{ k3s_version }}"
     K3S_URL: "https://{{ hostvars['control-plane']['ansible_host'] }}:6443"
-    K3S_TOKEN: "{{ hostvars['control-plane']['k3s_token']['content'] | b64decode | trim }}"
+    K3S_TOKEN: "{{ k3s_token['content'] | b64decode | trim }}"
+  no_log: true
 
 - name: Wait for worker to become Ready
   ansible.builtin.command:
@@ -21,7 +30,7 @@
       -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}'
   register: worker_ready
   until: worker_ready.stdout == "True"
-  retries: 10
+  retries: 30
   delay: 5
   changed_when: false
   delegate_to: control-plane

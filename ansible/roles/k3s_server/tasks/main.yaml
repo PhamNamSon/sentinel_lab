@@ -25,3 +25,29 @@
   retries: 10
   delay: 5
   changed_when: false
+
+- name: Read K3s kubeconfig
+  ansible.builtin.slurp:
+    src: /etc/rancher/k3s/k3s.yaml
+  register: k3s_kubeconfig
+  run_once: true
+
+- name: Ensure local kube directory exists
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.kube"
+    state: directory
+    mode: "0700"
+  delegate_to: localhost
+  become: false
+  run_once: true
+
+- name: Write kubeconfig locally
+  ansible.builtin.copy:
+    content: >-
+      {{ k3s_kubeconfig['content'] | b64decode
+         | replace('127.0.0.1', hostvars['control-plane']['ansible_host']) }}
+    dest: "{{ lookup('env', 'HOME') }}/.kube/sentinel-lab.yaml"
+    mode: "0600"
+  delegate_to: localhost
+  become: false
+  run_once: true

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "oracle.fullname" . }}
+  labels:
+    {{- include "oracle.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: oracle
+      port: {{ .Values.service.port }}
+      targetPort: oracle
+      protocol: TCP
+  selector:
+    {{- include "oracle.selectorLabels" . | nindent 4 }}

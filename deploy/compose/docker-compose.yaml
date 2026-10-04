@@ -2,7 +2,7 @@ name: sentinel
 
 services:
   database:
-    image: gvenzl/oracle-free:latest
+    image: gvenzl/oracle-free:23.26.3
     container_name: sentinel_database
 
     environment:

@@ -1,0 +1,60 @@
+name: Sentinel CI
+
+on:
+    push:
+        branches:
+            - main
+
+    pull_request:
+        branches:
+            - main
+
+permissions:
+    contents: read
+    packages: write
+
+jobs:
+    test:
+        name: Test Application
+        runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: app/target-api
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Java
+              uses: actions/setup-java@v4
+              with:
+                  distribution: temurin
+                  java-version: "21"
+                  cache: maven
+
+            - name: Run tests
+              run: ./mvnw test
+
+    helm:
+        name: Validate Helm Charts
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Helm
+              uses: azure/setup-helm@v4
+
+            - name: Lint Sentinel chart
+              run: helm lint deploy/kubernetes/sentinel
+
+            - name: Render Sentinel chart
+              run: helm template sentinel deploy/kubernetes/sentinel
+
+            - name: Lint Oracle chart
+              run: helm lint deploy/kubernetes/oracle
+
+            - name: Render Oracle chart
+              run: helm template oracle deploy/kubernetes/oracle

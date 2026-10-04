@@ -17,7 +17,7 @@ permissions:
 jobs:
   application-test:
     name: Test Application
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     defaults:
       run:

@@ -32,6 +32,7 @@ probes:
     path: /actuator/health/liveness
     periodSeconds: 5
     failureThreshold: 25
+
   liveness:
     path: /actuator/health/liveness
     periodSeconds: 10

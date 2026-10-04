@@ -33,7 +33,28 @@ jobs:
                   java-version: "21"
                   cache: maven
 
+            - name: Start Oracle
+              run: |
+                  docker run -d \
+                  --name oracle \
+                  -p 1521:1521 \
+                  -e ORACLE_PASSWORD=ci_oracle_password \
+                  -e APP_USER=sentinel_app \
+                  -e APP_USER_PASSWORD=ci_app_password \
+                  gvenzl/oracle-free:23.26.3
+
+            - name: Wait for Oracle
+              run: |
+                  until docker exec oracle healthcheck.sh; do
+                  echo "Waiting for Oracle..."
+                  sleep 10
+                  done
+
             - name: Run tests
+              env:
+                  SPRING_DATASOURCE_URL: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
+                  SPRING_DATASOURCE_USERNAME: sentinel_app
+                  SPRING_DATASOURCE_PASSWORD: ci_app_password
               run: ./mvnw test
 
     helm:

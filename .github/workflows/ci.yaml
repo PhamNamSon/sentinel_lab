@@ -60,7 +60,7 @@ jobs:
 
   helm-validation:
     name: Validate Helm Charts
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
@@ -83,7 +83,7 @@ jobs:
 
   publish:
     name: Build and Push Image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     needs:
       - application-test

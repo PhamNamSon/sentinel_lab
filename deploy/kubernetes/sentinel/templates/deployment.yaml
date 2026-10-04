@@ -23,10 +23,12 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+
           ports:
             - name: http
               containerPort: {{ .Values.container.port }}
               protocol: TCP
+
           env:
             - name: SPRING_DATASOURCE_URL
               value: {{ .Values.database.url | quote }}
@@ -39,18 +41,25 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secret.name }}
                   key: app-user-password
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          
+          startupProbe:
+            httpGet:
+              path: {{ .Values.probes.startup.path }}
+              port: http
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+
           livenessProbe:
             httpGet:
               path: {{ .Values.probes.liveness.path }}
               port: http
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
             periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
 
           readinessProbe:
             httpGet:
               path: {{ .Values.probes.readiness.path }}
               port: http
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
             periodSeconds: {{ .Values.probes.readiness.periodSeconds }}

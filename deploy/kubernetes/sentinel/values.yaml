@@ -28,12 +28,14 @@ resources:
     memory: "512Mi"
 
 probes:
+  startup:
+    path: /actuator/health/liveness
+    periodSeconds: 5
+    failureThreshold: 25
   liveness:
     path: /actuator/health/liveness
-    initialDelaySeconds: 30
     periodSeconds: 10
 
   readiness:
     path: /actuator/health/readiness
-    initialDelaySeconds: 20
     periodSeconds: 5

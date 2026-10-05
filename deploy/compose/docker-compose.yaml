@@ -7,8 +7,8 @@ services:
 
     environment:
       ORACLE_PASSWORD: ${ORACLE_PASSWORD}
-      APP_USER: ${APP_USER}
-      APP_USER_PASSWORD: ${APP_USER_PASSWORD}
+      APP_USER: ${DB_USERNAME}
+      APP_USER_PASSWORD: ${DB_PASSWORD}
 
     ports:
       - "1521:1521"
@@ -34,8 +34,8 @@ services:
 
     environment:
       SPRING_DATASOURCE_URL: jdbc:oracle:thin:@//database:1521/FREEPDB1
-      SPRING_DATASOURCE_USERNAME: ${APP_USER}
-      SPRING_DATASOURCE_PASSWORD: ${APP_USER_PASSWORD}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
 
     ports:
       - "8080:8080"
@@ -46,5 +46,37 @@ services:
 
     restart: unless-stopped
 
+  prometheus:
+    image: prom/prometheus:v3.13.4
+    container_name: sentinel_prometheus
+
+    ports:
+      - "9090:9090"
+
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+    depends_on:
+    - api
+
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:13.2.3
+    container_name: sentinel_grafana
+
+    ports:
+      - "3000:3000"
+    
+    volumes:
+    - grafana_data:/var/lib/grafana
+    - ./grafana/provisioning:/etc/grafana/provisioning:ro
+
+    depends_on:
+      - prometheus
+
+    restart: unless-stopped
+
 volumes:
   oracle_data:
+  grafana_data:

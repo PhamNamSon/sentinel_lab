@@ -13,4 +13,11 @@ public class TargetController {
         return "pong";
     }
 
+    @GetMapping("/error-test")
+    public String errorTest() {
+
+        throw new RuntimeException("Intentional observability test");
+
+    }
+
 }

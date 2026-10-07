@@ -12,3 +12,10 @@ kubeStateMetrics:
 
 nodeExporter:
   enabled: true
+
+prometheusOperator:
+  admissionWebhooks:
+    patch:
+      annotations:
+        argocd.argoproj.io/hook: PreSync
+        argocd.argoproj.io/hook-delete-policy: HookSucceeded

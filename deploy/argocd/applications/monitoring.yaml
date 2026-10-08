@@ -18,7 +18,7 @@ spec:
           - $values/deploy/monitoring/values.yaml
 
     - repoURL: https://github.com/phamnamson/sentinel_lab.git
-      targetRevision: main
+      targetRevision: argo_cd_monitoring
       ref: values
 
   destination:

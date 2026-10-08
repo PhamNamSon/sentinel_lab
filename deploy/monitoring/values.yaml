@@ -15,4 +15,5 @@ nodeExporter:
 
 prometheusOperator:
   admissionWebhooks:
-    enabled: false
+    certManager:
+      enabled: true

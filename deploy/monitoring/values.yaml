@@ -12,8 +12,3 @@ kubeStateMetrics:
 
 nodeExporter:
   enabled: true
-
-prometheusOperator:
-  admissionWebhooks:
-    certManager:
-      enabled: true

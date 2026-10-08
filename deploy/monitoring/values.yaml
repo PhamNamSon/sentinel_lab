@@ -15,4 +15,4 @@ nodeExporter:
 
 prometheusOperator:
   admissionWebhooks:
-    failurePolicy: Ignore
+    enabled: false

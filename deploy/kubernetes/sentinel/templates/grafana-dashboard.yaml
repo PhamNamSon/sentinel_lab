@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: sentinel-grafana-dashboard
+  labels:
+    grafana_dashboard: "1"
+
+data:
+  target-api-overview.json: |
+  {{ .Files.Get "dashboards/target-api-overview.json" | nindent 4 }}

@@ -4,6 +4,8 @@ kind: Application
 metadata:
   name: monitoring
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 
 spec:
   project: default
@@ -26,6 +28,12 @@ spec:
     namespace: monitoring
 
   syncPolicy:
+    retry:
+      limit: 5
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
     syncOptions:
       - ServerSideApply=true
       - CreateNamespace=true

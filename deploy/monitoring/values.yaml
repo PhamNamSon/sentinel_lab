@@ -1,14 +1,11 @@
-grafana:
-  enabled: true
+kubeEtcd:
+  enabled: false
 
-prometheus:
-  enabled: true
+kubeControllerManager:
+  enabled: false
 
-alertmanager:
-  enabled: true
+kubeScheduler:
+  enabled: false
 
-kubeStateMetrics:
-  enabled: true
-
-nodeExporter:
-  enabled: true
+kubeProxy:
+  enabled: false

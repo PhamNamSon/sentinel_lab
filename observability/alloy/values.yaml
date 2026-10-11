@@ -20,7 +20,7 @@ alloy:
 
       selector {
         role = "pod"
-        field = "spec.nodeName" + sys.env"NODE_NAME"}
+        field = "spec.nodeName" + sys.env("NODE_NAME")
       }
 
       discovery.relabel "pod_logs" {

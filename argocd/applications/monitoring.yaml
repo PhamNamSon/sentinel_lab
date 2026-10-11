@@ -17,7 +17,7 @@ spec:
 
       helm:
         valueFiles:
-          - $values/deploy/monitoring/values.yaml
+          - $values/monitoring/values.yaml
 
     - repoURL: https://github.com/phamnamson/sentinel_lab.git
       targetRevision: main

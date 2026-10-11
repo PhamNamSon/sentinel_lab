@@ -18,7 +18,7 @@ alloy:
         role = "pod"
       }
 
-      selector {
+      selectors {
         role = "pod"
         field = "spec.nodeName" + sys.env("NODE_NAME")
       }

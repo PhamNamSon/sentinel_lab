@@ -16,6 +16,7 @@ spec:
       targetRevision: 92.1.0
 
       helm:
+        releaseName: prometheus
         valueFiles:
           - $values/observability/prometheus/values.yaml
 

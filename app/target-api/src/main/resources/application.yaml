@@ -27,3 +27,11 @@ management:
     distribution:
       percentiles-histogram:
         "[http.server.requests]": true
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+
+  structured:
+    format:
+      console: ecs

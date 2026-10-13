@@ -60,6 +60,11 @@ alloy:
 
       loki.source.file "pod_logs" {
         targets    = local.file_match.pod_logs.targets
+        forward_to = [loki.process.pod_logs.receiver]
+      }
+
+      loki.process "pod_logs" {
+        stage.cri {}
         forward_to = [loki.write.default.receiver]
       }
 

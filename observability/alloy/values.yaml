@@ -8,6 +8,17 @@ alloy:
         fieldRef:
           fieldPath: spec.nodeName
 
+  extraPorts:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+      protocol: TCP
+
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+      protocol: TCP
+
   mounts:
     varlog: true
 
@@ -71,6 +82,36 @@ alloy:
       loki.write "default" {
         endpoint {
           url = "http://loki.logging.svc.cluster.local:3100/loki/api/v1/push"
+        }
+      }
+
+      otelcol.receiver.otlp "traces" {
+        grpc {
+          endpoint = "0.0.0.0:4317"
+        }
+
+        http {
+          endpoint = "0.0.0.0:4318"
+        }
+
+        output {
+          traces = [otelcol.processor.batch.traces.input]
+        }
+      }
+
+      otelcol.processor.batch "traces" {
+        output {
+          traces = [otelcol.exporter.otlp.tempo.input]
+        }
+      }
+
+      otelcol.exporter.otlp "tempo" {
+        client {
+          endpoint = "tempo.monitoring.svc.cluster.local:4317"
+
+          tls {
+            insecure = true
+          }
         }
       }
 

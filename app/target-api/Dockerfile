@@ -17,6 +17,10 @@ FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
+ARG OTEL_AGENT_VERSION=2.32.0
+
+ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${OTEL_AGENT_VERSION}/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
+
 COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080

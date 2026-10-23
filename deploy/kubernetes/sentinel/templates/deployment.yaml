@@ -43,6 +43,36 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secret.name }}
                   key: app-user-password
+                
+            {{- if .Values.opentelemetry.enabled }}
+            - name: JAVA_TOOL_OPTIONS
+              value: "-javaagent:/app/opentelemetry-javaagent.jar"
+
+            - name: OTEL_SERVICE_NAME
+              value: {{ .Values.opentelemetry.serviceName | quote }}
+
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: {{ .Values.opentelemetry.endpoint | quote }}
+
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: {{ .Values.opentelemetry.protocol | quote }}
+
+            - name: OTEL_TRACES_EXPORTER
+              value: {{ .Values.opentelemetry.tracesExporter | quote }}
+
+            - name: OTEL_METRICS_EXPORTER
+              value: {{ .Values.opentelemetry.metricsExporter | quote }}
+
+            - name: OTEL_LOGS_EXPORTER
+              value: {{ .Values.opentelemetry.logsExporter | quote }}
+
+            - name: OTEL_TRACES_SAMPLER
+              value: {{ .Values.opentelemetry.sampler | quote }}
+
+            - name: OTEL_TRACES_SAMPLER_ARG
+              value: {{ .Values.opentelemetry.samplingRatio | quote }}
+            {{- end }}
+
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

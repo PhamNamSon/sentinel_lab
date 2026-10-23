@@ -46,3 +46,18 @@ probes:
   readiness:
     path: /actuator/health/readiness
     periodSeconds: 5
+
+opentelemetry:
+  enabled: true
+
+  serviceName: sentinel
+
+  endpoint: "http://alloy.logging.svc.cluster.local:4318"
+  protocol: "http/protobuf"
+
+  tracesExporter: "otlp"
+  metricsExporter: "none"
+  logsExporter: "none"
+
+  sampler: "parentbased_traceidratio"
+  samplingRatio: "1.0"

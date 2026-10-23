@@ -34,3 +34,13 @@ grafana:
       url: http://tempo.monitoring.svc.cluster.local:3200
       isDefault: false
       editable: false
+      jsonData:
+        tracesToLogsV2:
+          datasourceUid: loki
+          spanStartTimeShift: "-5m"
+          spanEndTimeShift: "5m"
+          tags: []
+          filterByTraceID: false
+          filterBySpanID: false
+          customQuery: true
+          query: '{namespace="sentinel"} | json | trace_id="$${__trace.traceId}"'

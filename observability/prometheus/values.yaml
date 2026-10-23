@@ -19,6 +19,13 @@ grafana:
       url: http://loki.logging.svc.cluster.local:3100
       isDefault: false
       editable: false
+      jsonData:
+        derivedFields:
+          - name: TraceID
+            matcherRegex: '"trace_id"\s*:\s*"([a-fA-F0-9]{32})"'
+            datasourceUid: tempo
+            url: "$${__value.raw}"
+            urlDisplayLabel: "View Trace"
 
     - name: Tempo
       uid: tempo

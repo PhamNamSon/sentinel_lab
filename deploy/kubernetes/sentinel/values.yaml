@@ -37,7 +37,8 @@ probes:
   startup:
     path: /actuator/health/liveness
     periodSeconds: 5
-    failureThreshold: 25
+    failureThreshold: 60
+    timeoutSeconds: 3
 
   liveness:
     path: /actuator/health/liveness

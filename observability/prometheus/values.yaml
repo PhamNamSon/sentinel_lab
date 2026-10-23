@@ -10,7 +10,19 @@ kubeScheduler:
 kubeProxy:
   enabled: false
 
+prometheus:
+  prometheusSpec:
+    enableFeatures:
+      - exemplar-storage
+
 grafana:
+  sidecar:
+    datasources:
+      exemplarTraceIdDestinations:
+        datasourceUid: tempo
+        traceIdLabelName: trace_id
+        urlDisplayLabel: View Trace
+
   additionalDataSources:
     - name: Loki
       uid: loki

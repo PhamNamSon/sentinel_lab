@@ -36,7 +36,7 @@ autoscaling:
 probes:
   startup:
     path: /actuator/health/liveness
-    periodSeconds: 10
+    periodSeconds: 30
     failureThreshold: 60
     timeoutSeconds: 3
 

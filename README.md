@@ -14,7 +14,7 @@ The repository contains everything required to go from bare VMs to a running, mo
 
 ## Key Features
 
-- **Realistic workload**: CRUD and transactional order flows with a database dependency, so metrics, logs, and traces show meaningful behavior. OpenAPI/Swagger UI included.
+- **Workload**: CRUD and transactional order flows with a database dependency, so metrics, logs, and traces show meaningful behavior. OpenAPI/Swagger UI included.
 - **Declarative cluster provisioning**: one Ansible playbook installs K3s on the control plane, joins the worker, and writes a local kubeconfig.
 - **GitOps deployment**: ArgoCD with automated sync and self-heal; a single `root` application bootstraps every other component.
 - **Metrics**: Micrometer + Prometheus via a `ServiceMonitor`, a code-managed Grafana dashboard (namespace/service variables), and a `PrometheusRule` alert for API availability.
@@ -43,7 +43,9 @@ The repository contains everything required to go from bare VMs to a running, mo
 
 ## Architecture
 
-![Sentinel architecture](docs/images/architecture.svg)
+<p align="center">
+  <img src="docs/images/architecture.svg" alt="Sentinel architecture" width="100%">
+</p>
 
 **Delivery flow.** A Git tag (`vX.Y.Z`) triggers CI, which runs tests, validates the Helm charts, and pushes the image to GHCR. The new version is then promoted by updating the image tag in the chart; ArgoCD detects the change in Git and rolls it out to the cluster.
 

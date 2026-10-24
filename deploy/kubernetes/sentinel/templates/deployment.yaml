@@ -81,6 +81,7 @@ spec:
             httpGet:
               path: {{ .Values.probes.startup.path }}
               port: http
+            initialDelaySeconds: {{ .Values.probes.startup.initialDelaySeconds }}
             periodSeconds: {{ .Values.probes.startup.periodSeconds }}
             failureThreshold: {{ .Values.probes.startup.failureThreshold }}
             timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}

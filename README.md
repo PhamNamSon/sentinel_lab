@@ -43,9 +43,7 @@ The repository contains everything required to go from bare VMs to a running, mo
 
 ## Architecture
 
-<p align="center">
-  <img src="docs/images/architecture.svg" alt="Sentinel architecture" width="100%">
-</p>
+![Sentinel architecture](docs/images/architecture.svg)
 
 **Delivery flow.** A Git tag (`vX.Y.Z`) triggers CI, which runs tests, validates the Helm charts, and pushes the image to GHCR. The new version is then promoted by updating the image tag in the chart; ArgoCD detects the change in Git and rolls it out to the cluster.
 

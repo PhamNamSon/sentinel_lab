@@ -27,7 +27,7 @@ services:
 
   api:
     build:
-      context: ../../app/target-api
+      context: ../app/target-api
       dockerfile: Dockerfile
 
     container_name: sentinel_api

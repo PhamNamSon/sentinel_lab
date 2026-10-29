@@ -20,43 +20,4 @@ prometheus:
         sendExemplars: true
 
 grafana:
-  sidecar:
-    datasources:
-      exemplarTraceIdDestinations:
-        datasourceUid: tempo
-        traceIdLabelName: trace_id
-        urlDisplayLabel: View Trace
-
-  additionalDataSources:
-    - name: Loki
-      uid: loki
-      type: loki
-      access: proxy
-      url: http://loki.logging.svc.cluster.local:3100
-      isDefault: false
-      editable: false
-      jsonData:
-        derivedFields:
-          - name: TraceID
-            matcherRegex: '"trace_id"\s*:\s*"([a-fA-F0-9]{32})"'
-            datasourceUid: tempo
-            url: "$${__value.raw}"
-            urlDisplayLabel: "View Trace"
-
-    - name: Tempo
-      uid: tempo
-      type: tempo
-      access: proxy
-      url: http://tempo.monitoring.svc.cluster.local:3200
-      isDefault: false
-      editable: false
-      jsonData:
-        tracesToLogsV2:
-          datasourceUid: loki
-          spanStartTimeShift: "-5m"
-          spanEndTimeShift: "5m"
-          tags: []
-          filterByTraceID: false
-          filterBySpanID: false
-          customQuery: true
-          query: '{namespace="sentinel"} | json | trace_id="$${__trace.traceId}"'
+  enabled: false

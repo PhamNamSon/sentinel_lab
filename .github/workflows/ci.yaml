@@ -33,22 +33,23 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
+          cache-dependency-path: app/target-api/pom.xml
 
       - name: Start Oracle
         run: |
           docker run -d \
-          --name oracle \
-          -p 1521:1521 \
-          -e ORACLE_PASSWORD=ci_oracle_password \
-          -e APP_USER=sentinel_app \
-          -e APP_USER_PASSWORD=ci_app_password \
-          gvenzl/oracle-free:23.26.3
+            --name oracle \
+            -p 1521:1521 \
+            -e ORACLE_PASSWORD=ci_oracle_password \
+            -e APP_USER=sentinel_app \
+            -e APP_USER_PASSWORD=ci_app_password \
+            gvenzl/oracle-free:23.26.3
 
       - name: Wait for Oracle
         run: |
           until docker exec oracle healthcheck.sh; do
-          echo "Waiting for Oracle..."
-          sleep 10
+            echo "Waiting for Oracle..."
+            sleep 10
           done
 
       - name: Run tests
@@ -59,7 +60,7 @@ jobs:
         run: ./mvnw test
 
   helm-validation:
-    name: Validate Helm Charts
+    name: Validate Kubernetes Configuration
     runs-on: ubuntu-24.04
 
     steps:
@@ -70,16 +71,31 @@ jobs:
         uses: azure/setup-helm@v5
 
       - name: Lint Sentinel chart
-        run: helm lint deploy/kubernetes/sentinel
+        run: helm lint cluster/apps/sentinel
 
       - name: Render Sentinel chart
-        run: helm template sentinel deploy/kubernetes/sentinel
+        run: helm template sentinel cluster/apps/sentinel
 
       - name: Lint Oracle chart
-        run: helm lint deploy/kubernetes/oracle
+        run: helm lint cluster/apps/oracle
 
       - name: Render Oracle chart
-        run: helm template oracle deploy/kubernetes/oracle
+        run: helm template oracle cluster/apps/oracle
+
+      - name: Validate Argo CD YAML
+        run: |
+          python3 -m pip install pyyaml
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import yaml
+
+          for path in Path("cluster/argocd").rglob("*.yaml"):
+              with path.open() as file:
+                  list(yaml.safe_load_all(file))
+
+              print(f"Valid: {path}")
+          PY
 
   publish:
     name: Build and Push Image

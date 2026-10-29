@@ -81,7 +81,7 @@ alloy:
 
       loki.write "default" {
         endpoint {
-          url = "http://loki.logging.svc.cluster.local:3100/loki/api/v1/push"
+          url = "http://100.90.165.108:3100/loki/api/v1/push"
         }
       }
 

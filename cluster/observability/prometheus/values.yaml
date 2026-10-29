@@ -15,6 +15,10 @@ prometheus:
     enableFeatures:
       - exemplar-storage
 
+    remoteWrite:
+      - url: http://100.90.165.108:9090/api/v1/write
+        sendExemplars: true
+
 grafana:
   sidecar:
     datasources:

@@ -32,4 +32,4 @@ datasources:
         filterByTraceID: false
         filterBySpanID: false
         customQuery: true
-        query: '{namespace="sentinel"} | json | trace_id="$${__trace.traceId}"'
+        query: '{k8s_namespace_name="sentinel"} | json | trace_id="$${__trace.traceId}"'

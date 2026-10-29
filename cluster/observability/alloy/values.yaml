@@ -76,36 +76,40 @@ alloy:
 
       loki.process "pod_logs" {
         stage.cri {}
-        forward_to = [loki.write.default.receiver]
+        forward_to = [otelcol.receiver.loki.default.receiver]
       }
 
-      loki.write "default" {
-        endpoint {
-          url = "http://100.90.165.108:3100/loki/api/v1/push"
+      otelcol.receiver.loki "default" {
+        output {
+          logs = [otelcol.processor.transform.logs.input]
         }
       }
 
-      otelcol.receiver.otlp "traces" {
-        grpc {
-          endpoint = "0.0.0.0:4317"
-        }
+      otelcol.processor.transform "logs" {
+        error_mode = "ignore"
 
-        http {
-          endpoint = "0.0.0.0:4318"
+        log_statements {
+          context = "log"
+          statements = [
+            `set(resource.attributes["k8s.namespace.name"], attributes["namespace"])`,
+            `set(resource.attributes["k8s.pod.name"], attributes["pod"])`,
+            `set(resource.attributes["k8s.container.name"], attributes["container"])`,
+            `set(resource.attributes["service.name"], attributes["container"])`,
+          ]
         }
 
         output {
-          traces = [otelcol.processor.batch.traces.input]
+          logs = [otelcol.processor.batch.logs.input]
         }
       }
 
-      otelcol.processor.batch "traces" {
+      otelcol.processor.batch "logs" {
         output {
-          traces = [otelcol.exporter.otlp.tempo.input]
+          logs = [otelcol.exporter.otlp.gateway.input]
         }
       }
 
-      otelcol.exporter.otlp "tempo" {
+      otelcol.exporter.otlp "gateway" {
         client {
           endpoint = "100.90.165.108:4317"
 
